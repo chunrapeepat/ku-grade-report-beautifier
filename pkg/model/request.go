@@ -6,74 +6,97 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"unicode/utf8"
+
+	"github.com/chunza2542/ku-grade-report-beautifier/pkg/api"
 )
-
-const OFFSET = 0xd60
-const WIDTH = 3
-
-func ToUTF8(tis620bytes []byte) []byte {
-	l := findOutputLength(tis620bytes)
-	output := make([]byte, l)
-
-	index := 0
-	buffer := make([]byte, WIDTH)
-	for _, c := range tis620bytes {
-		if !isThaiChar(c) {
-			output[index] = c
-
-			index++
-		} else {
-			utf8.EncodeRune(buffer, int32(c)+OFFSET)
-			output[index] = buffer[0]
-			output[index+1] = buffer[1]
-			output[index+2] = buffer[2]
-
-			index += 3
-		}
-	}
-	return output
-}
-
-func findOutputLength(tis620bytes []byte) int {
-	outputLen := 0
-	for i, _ := range tis620bytes {
-		if isThaiChar(tis620bytes[i]) {
-			outputLen += WIDTH //always 3 bytes for thai char
-		} else {
-			outputLen += 1
-		}
-	}
-	return outputLen
-}
-
-func isThaiChar(c byte) bool {
-	return (c >= 0xA1 && c <= 0xDA) || (c >= 0xDF && c <= 0xFB)
-}
 
 // Login login to regis ku account
 // return sessionId and error
-func Login(username, password, zone string) (*string, error) {
+func Login(username, password, zone string) (string, error) {
+	client := &http.Client{}
+	// form data
 	form := url.Values{}
 	form.Add("form_username", username)
 	form.Add("form_password", password)
 	form.Add("zone", zone)
-	resp, err := http.PostForm(
+	// open new request
+	req, err := http.NewRequest(
+		"POST",
 		"https://std.regis.ku.ac.th/_Login.php",
-		form,
+		strings.NewReader(form.Encode()),
 	)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
+	// get default session & set cookie
+	cookie, err := getCookie()
+	if err != nil {
+		return "", err
+	}
+	req.Header.Set("Cookie", cookie)
+	req.Header.Set(
+		"Content-Type",
+		"application/x-www-form-urlencoded",
+	)
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	// check login from body and return sessionid
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	bodyString := string(ToUTF8(body))
+	bodyString := string(api.ToUTF8(body))
 	if strings.Contains(bodyString, "formlogin") {
-		fmt.Println("Login failed")
+		return "", api.ErrLoginFailed
 	}
-	fmt.Println("Success~", resp.Header.Get("Set-Cookie"))
-	return nil, nil
+	return cookie, nil
+}
+
+// GetUserInformation get all the user information except grade
+// student no, name, faculty, field of study, degree
+func GetUserInformation(cookie string) {
+	client := &http.Client{}
+	// open new request
+	req, err := http.NewRequest(
+		"GET",
+		"https://std.regis.ku.ac.th/_Member_Information.php",
+		nil,
+	)
+	if err != nil {
+		return
+	}
+	req.Header.Set("Cookie", cookie)
+	resp, err := client.Do(req)
+	if err != nil {
+		return
+	}
+	// get information from body
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return
+	}
+	bodyString := string(api.ToUTF8(body))
+	fmt.Println(bodyString)
+}
+
+// get cookie by visit website
+func getCookie() (string, error) {
+	client := &http.Client{}
+	resp, err := client.Get("https://std.regis.ku.ac.th/_Login.php")
+	if err != nil {
+		return "", err
+	}
+	cookie := parseCookie(resp.Header)
+	return cookie, nil
+}
+
+// get http header return PHPSESSID
+func parseCookie(header http.Header) string {
+	setCookie := header.Get("Set-Cookie")
+	cookie := strings.Split(setCookie, ";")[0]
+	return cookie
 }
