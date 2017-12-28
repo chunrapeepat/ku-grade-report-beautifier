@@ -1,7 +1,6 @@
 package model
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -57,7 +56,7 @@ func Login(username, password, zone string) (string, error) {
 
 // GetUserInformation get all the user information except grade
 // student no, name, faculty, field of study, degree
-func GetUserInformation(cookie string) {
+func GetUserInformation(cookie string) (*api.UserInfo, error) {
 	client := &http.Client{}
 	// open new request
 	req, err := http.NewRequest(
@@ -66,21 +65,21 @@ func GetUserInformation(cookie string) {
 		nil,
 	)
 	if err != nil {
-		return
+		return nil, err
 	}
 	req.Header.Set("Cookie", cookie)
 	resp, err := client.Do(req)
 	if err != nil {
-		return
+		return nil, err
 	}
 	// get information from body
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return
+		return nil, err
 	}
 	bodyString := string(api.ToUTF8(body))
-	fmt.Println(bodyString)
+	return infoSelector(bodyString), nil
 }
 
 // Logout destroy sessionid from website
@@ -91,6 +90,10 @@ func Logout(cookie string) error {
 		return err
 	}
 	return nil
+}
+
+func infoSelector(body string) *api.UserInfo {
+	return &api.UserInfo{}
 }
 
 // get cookie by visit website

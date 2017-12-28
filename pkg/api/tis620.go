@@ -2,9 +2,13 @@ package api
 
 import "unicode/utf8"
 
-const OFFSET = 0xd60
-const WIDTH = 3
+// constant variable
+const (
+	OFFSET = 0xd60
+	WIDTH  = 3
+)
 
+// ToUTF8 thai industrial standard 620-2533
 func ToUTF8(tis620bytes []byte) []byte {
 	l := findOutputLength(tis620bytes)
 	output := make([]byte, l)
@@ -30,11 +34,11 @@ func ToUTF8(tis620bytes []byte) []byte {
 
 func findOutputLength(tis620bytes []byte) int {
 	outputLen := 0
-	for i, _ := range tis620bytes {
+	for i := range tis620bytes {
 		if isThaiChar(tis620bytes[i]) {
 			outputLen += WIDTH //always 3 bytes for thai char
 		} else {
-			outputLen += 1
+			outputLen++
 		}
 	}
 	return outputLen
