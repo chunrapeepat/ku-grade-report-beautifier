@@ -83,6 +83,16 @@ func GetUserInformation(cookie string) {
 	fmt.Println(bodyString)
 }
 
+// Logout destroy sessionid from website
+func Logout(cookie string) error {
+	client := &http.Client{}
+	_, err := client.Get("https://std.regis.ku.ac.th/_Logout.php")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // get cookie by visit website
 func getCookie() (string, error) {
 	client := &http.Client{}
