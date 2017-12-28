@@ -6,4 +6,6 @@ import "net/http"
 func Mount(mux *http.ServeMux) {
 	mux.HandleFunc("/", indexGetHandler)
 	mux.HandleFunc("/view", viewGetHandler)
+
+	mux.Handle("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("static"))))
 }
