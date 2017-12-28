@@ -6,6 +6,7 @@ type UserInfo struct {
 	Name         string
 	Faculty      string
 	FieldOfStudy string
+	CourseType   string
 	Degree       string
 }
 
