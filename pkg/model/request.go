@@ -82,6 +82,35 @@ func GetUserInformation(cookie string) (*api.UserInfo, error) {
 	return infoSelector(bodyString), nil
 }
 
+// GetGradeReport get user all grade list
+func GetGradeReport(cookie string) ([]*api.CourseInfo, error) {
+	client := &http.Client{}
+	form := url.Values{}
+	// open new request
+	req, err := http.NewRequest(
+		"GET",
+		"https://std.regis.ku.ac.th/_Student_RptKu.php?mode=KU20",
+		strings.NewReader(form.Encode()),
+	)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Cookie", cookie)
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36")
+	req.Header.Set("Referer", "https://std.regis.ku.ac.th/_Student_RptKu.php?mode=KU20")
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	bodyString := string(api.ToUTF8(body))
+	return gradeSelector(bodyString), nil
+}
+
 // Logout destroy sessionid from website
 func Logout(cookie string) error {
 	client := &http.Client{}

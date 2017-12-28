@@ -8,6 +8,7 @@ import (
 	"github.com/chunza2542/ku-grade-report-beautifier/pkg/api"
 )
 
+// get all user information using regex
 func infoSelector(body string) *api.UserInfo {
 	studentNoRegex := regexp.MustCompile(`รหัสบัญชี</th><td valign='top' nowrap>b(.*?)&nbsp;`)
 	nameRegex := regexp.MustCompile(`ชื่อ-นามสกุล \(ไทย\)</th><td valign='top' nowrap>(.*?)&nbsp;`)
@@ -26,6 +27,28 @@ func infoSelector(body string) *api.UserInfo {
 	}
 
 	return &userInfo
+}
+
+// select all grade list using regex
+func gradeSelector(body string) []*api.CourseInfo {
+	tableRegex := regexp.MustCompile(`<td valign=top  align=left  width=325px> <table border=0 class=table  width=100% cellspacing=0 cellpadding=0><tr bgcolor=#006633><th align=center class=th_cs width=25%>Course<br> Code</th><th align=center class=th_cs  width=40% >Course Title</th><th align=center class=th_cs  width=20%>Grade</th><th align=center class=th_cs  width=15%>Credit</th></tr><tr><td  colspan=4 class=head_sm align=center>First Semester 2017</td></tr>(.*?)<tr><td align=left colspan=4 class=gpa_sm><dd><dd>`)
+	table := tableRegex.FindStringSubmatch(body)[1]
+
+	var report []*api.CourseInfo
+
+	trRegex := regexp.MustCompile(`<tr>(.*?)</tr>`)
+	for _, tr := range trRegex.FindAllString(table, -1) {
+		var courseInfo api.CourseInfo
+		tdRegex := regexp.MustCompile(`<td (nowrap|align=center)? class=tr>(<FONT COLOR="#(.+)">)?(.*?)(</FONT>)?</td>`)
+		td := tdRegex.FindAllStringSubmatch(tr, -1)
+		courseInfo.Code = td[0][4]
+		courseInfo.Title = td[1][4]
+		courseInfo.Grade = td[2][4]
+		courseInfo.Credit = td[3][4]
+		report = append(report, &courseInfo)
+	}
+
+	return report
 }
 
 // get cookie by visit website
