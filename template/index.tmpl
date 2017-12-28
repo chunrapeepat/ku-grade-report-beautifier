@@ -1,3 +1,40 @@
 {{define "body"}}
-  <p>Hello this is index page</p>
+<div class="index-container">
+  <br><br>
+  <h1>Grade Report Beautifier</h1>
+  <span class="information">What is it? Grade Report Beautifier is a grade report web application for all Kasetsart University students. our goal is to make a report more beautiful, readable and simple than the old one.</span>
+
+  <br><br><br>
+  <div class="row">
+    <div class="col-md-4">
+      <span class="success">Note: This app will not store any user information like username, password, so you can make it surely by view our source code.</span>
+      <span class="warning">Warning: This app not supported on mobile.</span>
+    </div>
+    <div class="col-md-8">
+      <form method="POST">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" class="form-control" placeholder="e.g. b6010405408">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" class="form-control" placeholder="Your account password">
+          <small class="form-text text-muted">We'll never share your information with anyone else.</small>
+        </div>
+        <button type="submit" class="btn btn-primary">Generate grade report</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>The Chun Rapeepat Production @2017</span>
+    <a target="_blank" href="https://github.com/chunza2542/ku-grade-report-beautifier">Source Code</a>
+    <div></div>
+    <a target="_blank" href="https://github.com/chunza2542/ku-grade-report-beautifier/issues">Report Bugs</a>
+    <div></div>
+    <a target="_blank" href="https://thechun.xyz/">Personal Site</a>
+    <div></div>
+    <a target="_blank" href="https://www.facebook.com/chun42">Facebook</a>
+  </div>
+</div>
 {{end}}
