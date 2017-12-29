@@ -11,5 +11,6 @@ func indexGetHandler(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
-	view.Index(w, r, &view.IndexData{})
+	// view.Index(w, r, &view.IndexData{})
+	view.Report(w, r, &view.ReportData{})
 }
