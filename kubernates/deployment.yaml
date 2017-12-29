@@ -3,16 +3,15 @@ kind: Deployment
 metadata:
   name: ku-grade-report-beautifier
   labels:
-    app: ku
+    app: frontend
 spec:
   template:
     metadata:
       labels:
-        app: ku
-        tier: web
+        app: frontend
     spec:
       containers:
       - name: ku-grade-report-beautifier
-        image: gcr.io/steady-hallway-190201/ku-grade-report-beautifier:v1
+        image: gcr.io/grade-report-beautifier/ku-grade-report-beautifier:v1
         ports:
         - containerPort: 8080
