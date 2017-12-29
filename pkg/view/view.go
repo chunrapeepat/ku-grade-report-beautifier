@@ -14,6 +14,7 @@ type IndexData struct {
 type ReportData struct {
 	UserInfo   *api.UserInfo
 	CourseInfo []*api.CourseInfo
+	GPA        float32
 }
 
 // Index render index template to view

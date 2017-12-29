@@ -3,6 +3,7 @@ package app
 import (
 	"net/http"
 
+	"github.com/chunza2542/ku-grade-report-beautifier/pkg/api"
 	"github.com/chunza2542/ku-grade-report-beautifier/pkg/model"
 	"github.com/chunza2542/ku-grade-report-beautifier/pkg/view"
 )
@@ -36,10 +37,17 @@ func indexGetHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+		// calculate gpa
+		gpa, err := api.CalculateGPA(grade)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		// Parse Data
 		view.Report(w, r, &view.ReportData{
 			UserInfo:   userInfo,
 			CourseInfo: grade,
+			GPA:        gpa,
 		})
 	}
 }
