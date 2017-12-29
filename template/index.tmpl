@@ -11,14 +11,14 @@
       <span class="warning">Warning: This app not supported on mobile.</span>
     </div>
     <div class="col-md-8">
-      <form method="POST">
+      <form method="POST" action="/">
         <div class="form-group">
           <label>Username</label>
-          <input type="text" class="form-control" placeholder="e.g. b6010405408">
+          <input type="text" name="username" class="form-control" placeholder="e.g. b6010405408">
         </div>
         <div class="form-group">
           <label>Password</label>
-          <input type="password" class="form-control" placeholder="Your account password">
+          <input type="password" name="password" class="form-control" placeholder="Your account password">
           <small class="form-text text-muted">We'll never share your information with anyone else.</small>
         </div>
         <button type="submit" class="btn btn-primary">Generate grade report</button>

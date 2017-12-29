@@ -14,9 +14,9 @@
           <h1>Grade Report</h1>
           <br>
           <span class="information">
-            Student Number: <span>6010405408</span> Name: <span>นายรพีพัฒน์ แก้วประสิทธิ์</span><br>
-            Faculty: <span>คณะวิทยาศาสตร์</span> Field Of Study: <span>วิทยาการคอมพิวเตอร์</span><br>
-            Sector: <span>ภาษาไทย ปกติ</span> Degree: <span>ปริญญาตรี</span>
+            Student Number: <span>{{.UserInfo.StudentNo}}</span> Name: <span>{{.UserInfo.Name}}</span><br>
+            Faculty: <span>{{.UserInfo.Faculty}}</span> Field Of Study: <span>{{.UserInfo.FieldOfStudy}}</span><br>
+            Sector: <span>{{.UserInfo.CourseType}}</span> Degree: <span>{{.UserInfo.Degree}}</span>
           </span>
         </div>
         <div>
@@ -27,85 +27,17 @@
       <br>
       <hr><br>
 
+      {{range .CourseInfo}}
       <div class="grade">
-        <div>A</div>
+        <div>{{.Grade}}</div>
         <div>
-          <h2>Fundamental Programming Concept</h2>
+          <h2>{{.Title}}</h2>
           <span class="information">
-            Course Code: <span>01321399</span> Grade: <span>A</span> Credit: <span>3</span>
+            Course Code: <span>{{.Code}}</span> Grade: <span>{{.Grade}}</span> Credit: <span>{{.Credit}}</span>
           </span>
         </div>
       </div>
-
-      <div class="grade">
-        <div>A</div>
-        <div>
-          <h2>Fundamental Programming Concept</h2>
-          <span class="information">
-            Course Code: <span>01321399</span> Grade: <span>A</span> Credit: <span>3</span>
-          </span>
-        </div>
-      </div>
-
-      <div class="grade">
-        <div>A</div>
-        <div>
-          <h2>Fundamental Programming Concept</h2>
-          <span class="information">
-            Course Code: <span>01321399</span> Grade: <span>A</span> Credit: <span>3</span>
-          </span>
-        </div>
-      </div>
-
-      <div class="grade">
-        <div>A</div>
-        <div>
-          <h2>Fundamental Programming Concept</h2>
-          <span class="information">
-            Course Code: <span>01321399</span> Grade: <span>A</span> Credit: <span>3</span>
-          </span>
-        </div>
-      </div>
-
-      <div class="grade">
-        <div>A</div>
-        <div>
-          <h2>Fundamental Programming Concept</h2>
-          <span class="information">
-            Course Code: <span>01321399</span> Grade: <span>A</span> Credit: <span>3</span>
-          </span>
-        </div>
-      </div>
-
-      <div class="grade">
-        <div>A</div>
-        <div>
-          <h2>Fundamental Programming Concept</h2>
-          <span class="information">
-            Course Code: <span>01321399</span> Grade: <span>A</span> Credit: <span>3</span>
-          </span>
-        </div>
-      </div>
-
-      <div class="grade">
-        <div>A</div>
-        <div>
-          <h2>Fundamental Programming Concept</h2>
-          <span class="information">
-            Course Code: <span>01321399</span> Grade: <span>A</span> Credit: <span>3</span>
-          </span>
-        </div>
-      </div>
-
-      <div class="grade">
-        <div>A</div>
-        <div>
-          <h2>Fundamental Programming Concept</h2>
-          <span class="information">
-            Course Code: <span>01321399</span> Grade: <span>A</span> Credit: <span>3</span>
-          </span>
-        </div>
-      </div>
+      {{end}}
 
       <br>
       <span class="information">
