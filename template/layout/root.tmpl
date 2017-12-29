@@ -18,6 +18,10 @@
       gtag('js', new Date());
 
       gtag('config', 'UA-77270777-3');
+
+      if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+        document.body.innerHTML = "This app not support mobile device T-T"
+      }
     </script>
   </body>
 </html>
